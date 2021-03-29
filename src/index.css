@@ -2,6 +2,7 @@ body {
     /* font: 14px "Century Gothic", Futura, sans-serif; */
     font: 14px "Roboto";
     margin: 20px;
+    background-color: #7e7e7e;
 }
 
 .game-board {
@@ -23,20 +24,16 @@ body {
     outline: none;
 }
 
-/* .square:hover {
-    border-width: 2px;
-} */
-
 .white {
     background-color: #fff;
 }
 
 .red {
-    background-color: #f00;
+    background-color: #e23535;
 }
 
 .blue {
-    background-color: #00f;
+    background-color: #0b5eaf;
 }
 
 .darkgrey {
