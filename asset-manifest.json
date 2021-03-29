@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/pkm-battleship/static/css/main.65d117a9.chunk.css",
+    "main.js": "/pkm-battleship/static/js/main.a7d3ffd2.chunk.js",
+    "main.js.map": "/pkm-battleship/static/js/main.a7d3ffd2.chunk.js.map",
+    "runtime-main.js": "/pkm-battleship/static/js/runtime-main.db264aab.js",
+    "runtime-main.js.map": "/pkm-battleship/static/js/runtime-main.db264aab.js.map",
+    "static/css/2.1c697c7a.chunk.css": "/pkm-battleship/static/css/2.1c697c7a.chunk.css",
+    "static/js/2.bb3a6391.chunk.js": "/pkm-battleship/static/js/2.bb3a6391.chunk.js",
+    "static/js/2.bb3a6391.chunk.js.map": "/pkm-battleship/static/js/2.bb3a6391.chunk.js.map",
+    "index.html": "/pkm-battleship/index.html",
+    "static/css/2.1c697c7a.chunk.css.map": "/pkm-battleship/static/css/2.1c697c7a.chunk.css.map",
+    "static/css/main.65d117a9.chunk.css.map": "/pkm-battleship/static/css/main.65d117a9.chunk.css.map",
+    "static/js/2.bb3a6391.chunk.js.LICENSE.txt": "/pkm-battleship/static/js/2.bb3a6391.chunk.js.LICENSE.txt",
+    "static/media/index.css": "/pkm-battleship/static/media/sprite_map.0f43765e.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.db264aab.js",
+    "static/css/2.1c697c7a.chunk.css",
+    "static/js/2.bb3a6391.chunk.js",
+    "static/css/main.65d117a9.chunk.css",
+    "static/js/main.a7d3ffd2.chunk.js"
+  ]
+}
