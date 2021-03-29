@@ -1,5 +1,6 @@
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
+    /* font: 14px "Century Gothic", Futura, sans-serif; */
+    font: 14px "Roboto";
     margin: 20px;
 }
 
@@ -22,6 +23,10 @@ body {
     outline: none;
 }
 
+/* .square:hover {
+    border-width: 2px;
+} */
+
 .white {
     background-color: #fff;
 }
@@ -38,9 +43,18 @@ body {
     background-color: rgb(56, 56, 56);
 }
 
+.board-gap {
+    display: block;
+    height: 50px;
+}
 
-
-
+.controls {
+    display: flex;
+    padding-top: 20px;
+    padding-left: 20px;
+    width: 750px;
+    justify-content: space-between;
+}
 
 
 
