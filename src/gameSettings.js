@@ -6,13 +6,65 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import Typography from '@material-ui/core/Typography'
+import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import Link from '@material-ui/core/Link'
-import Divider from '@material-ui/core/Divider'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import ListItemText from '@material-ui/core/ListItemText';
+import Link from '@material-ui/core/Link';
+import Divider from '@material-ui/core/Divider';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Collapse from '@material-ui/core/Collapse';
+
+import Checkbox from '@material-ui/core/Checkbox';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
+import { ListItemIcon } from '@material-ui/core';
+
+
+function GenerationBoxes(props) {
+    const [genOpen, setGenOpen] = useState(false);
+
+    const genList = [...Array(8).keys()];
+    const supported = [true,true,true,false,false,false,false,false];    
+    
+    const elements = genList.map((gen) => {
+        return (
+            <ListItem
+                key={gen}
+                dense
+                button
+                disabled={!supported[gen]}
+                onClick={() => props.toggleGen(gen)}
+            >
+                <ListItemIcon>
+                    <Checkbox
+                        edge="start"
+                        checked={props.includeGens[gen]}
+                        name={"gen"+(gen+1)}
+                        disableRipple
+                    />
+                </ListItemIcon>
+                <ListItemText primary={`Generation ${gen+1}`} />
+            </ListItem>
+        )
+    });
+
+
+    return (
+        <React.Fragment>
+            <ListItem button onClick={() => setGenOpen(!genOpen)}>
+                <ListItemText primary={"Generations"} />
+                {genOpen ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={genOpen} timeout="auto" unmountOnExit>
+                <List>
+                    {elements}
+                </List>
+            </Collapse>
+        </React.Fragment>
+    )
+}
 
 
 function SideBar(props) {
@@ -32,7 +84,12 @@ function SideBar(props) {
         <List
             subheader={<ListSubheader classes={{root: classes.subheader}}>Options</ListSubheader>}
             classes={{root: classes.root}}
-        >
+        >            
+            <GenerationBoxes 
+                includeGens={props.includedGens}
+                toggleGen={props.toggleGen}
+            />
+            <Divider variant="middle" />
             <ListItem>
                 <TextField
                     variant="outlined"
@@ -68,14 +125,14 @@ function SideBar(props) {
                     size="large"
                     onClick={props.resetGame}
                     classes={{root: classes.root}}
-                >Reset Game</Button>
+                >New Game</Button>
             </ListItem>
             <Divider variant="middle" />
             <ListItem>
-                <Link
+                <a href="https://github.com/matthewkirby/pkm-battleship"><Link
                     component="button"
                     variant="h6"
-                >GitHub</Link>
+                >GitHub</Link></a>
             </ListItem>
 
         </List>
@@ -124,6 +181,8 @@ function ControlCenter(props) {
                             exportPkmOrder={props.exportPkmOrder}
                             importPkmOrder={props.importPkmOrder}
                             resetGame={props.resetGame}
+                            includedGens={props.includedGens}
+                            toggleGen={props.toggleGen}
                         />
                     </SwipeableDrawer>
                 </Toolbar>

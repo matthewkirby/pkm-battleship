@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import 'fontsource-roboto'
 import lookup from './data/sprite_lookup.json'
 import ControlCenter from './gameSettings.js'
 
@@ -49,33 +48,52 @@ function Board(props) {
 
 function Game(props) {
     const [rowLen, setRowLen] = useState(14);
+    const [maxRows, setMaxRows] = useState(11);
+    const [includedGens, setIncludedGens] = useState([true, false, false, false, false, false, false, false])
+    const genTable = {
+        0: [...Array(151).keys()],
+        1: [...Array(100).keys()].map((val) => { return val+151; }),
+        2: [...Array(135).keys()].map((val) => { return val+251; })
+    }
 
-    const npkm = 151;
-    const [pkmOrder, setPkmOrder] = useState(shuffleBoard(npkm));
-    const [boardState, setBoardState] = useState([Array(npkm).fill(0), Array(npkm).fill(0)]);
+    const [pkmOrder, setPkmOrder] = useState(shuffleBoard());
+    const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill(0), Array(maxRows*rowLen).fill(0)]);
 
-    // function shuffleBoard(npkm, seed) {
-    function shuffleBoard(npkm) {
-        const rng = Math.random;
-        let tmpPkmOrder = [...Array(npkm).keys()];
-        return tmpPkmOrder.sort(() => rng() - 0.5);
+    function shuffleBoard() {
+        let tmpPkmOrder = [];
+        for(let i=0; i<8; i++) {
+            if(includedGens[i]) {
+                tmpPkmOrder = tmpPkmOrder.concat(genTable[i])
+            }
+        }
+
+        let shuffledOrder = tmpPkmOrder.sort(() => Math.random() - 0.5);
+        if(shuffledOrder.length > rowLen*maxRows) {
+            shuffledOrder = shuffledOrder.slice(0, rowLen*maxRows);
+        }
+        return shuffledOrder
     }
 
     // Grab the locally stored values
     React.useEffect(() => {
         setRowLen(Number(localStorage.getItem("rowLen") || 14));
+        setMaxRows(Number(localStorage.getItem("maxRows") || 11));
         const savedPkmOrder = JSON.parse(localStorage.getItem("pkmOrder"));
         if(savedPkmOrder !== null) { setPkmOrder(savedPkmOrder); }
         const savedBoardState = JSON.parse(localStorage.getItem("boardState"));
         if(savedBoardState !== null) { setBoardState(savedBoardState); }
+        const savedIncludedGens = JSON.parse(localStorage.getItem("includedGens"));
+        if(savedIncludedGens !== null) { setIncludedGens(savedIncludedGens); }
     }, []);
 
     // Save state to localstorage
     React.useEffect(() => {
         localStorage.setItem("rowLen", rowLen);
-        localStorage.setItem("pkmOrder", JSON.stringify(pkmOrder))
-        localStorage.setItem("boardState", JSON.stringify(boardState))
-    }, [rowLen, pkmOrder, boardState]);
+        localStorage.setItem("maxRows", maxRows);
+        localStorage.setItem("pkmOrder", JSON.stringify(pkmOrder));
+        localStorage.setItem("boardState", JSON.stringify(boardState));
+        localStorage.setItem("includedGens", JSON.stringify(includedGens));
+    }, [rowLen, maxRows, pkmOrder, boardState, includedGens]);
 
     function handleClick(boardNum, i) {
         const newBoardState = boardState.slice();
@@ -93,8 +111,8 @@ function Game(props) {
     }
 
     function resetGame() {
-        setPkmOrder(shuffleBoard(npkm));
-        setBoardState([Array(npkm).fill(0), Array(npkm).fill(0)]);
+        setPkmOrder(shuffleBoard());
+        setBoardState([Array(maxRows*rowLen).fill(0), Array(maxRows*rowLen).fill(0)]);
     }
 
     function exportPkmOrder() {
@@ -108,6 +126,12 @@ function Game(props) {
         setPkmOrder(JSON.parse(newPkmOrder));
     }
 
+    function toggleGen(gen) {
+        let newIncludedGens = includedGens.slice()
+        newIncludedGens[gen] = !newIncludedGens[gen];
+        setIncludedGens(newIncludedGens);
+    }
+
 
     return (
         <React.Fragment>
@@ -116,6 +140,8 @@ function Game(props) {
                 resetGame={resetGame}
                 exportPkmOrder={exportPkmOrder}
                 importPkmOrder={importPkmOrder}
+                includedGens={includedGens}
+                toggleGen={toggleGen}
             />
             <div className="game">
                 <Board
