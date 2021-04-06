@@ -1,5 +1,4 @@
 body {
-    /* font: 14px "Century Gothic", Futura, sans-serif; */
     font: 14px "Roboto";
     margin: 20px;
     background-color: #7e7e7e;
@@ -40,9 +39,17 @@ body {
     background-color: rgb(56, 56, 56);
 }
 
+.selection {
+    border: 4px solid #000;
+}
+
 .board-gap {
     display: block;
     height: 50px;
+}
+
+.flex-grow {
+    flex-grow: 1;
 }
 
 .controls {
@@ -52,57 +59,3 @@ body {
     width: 750px;
     justify-content: space-between;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-/* ol, ul {
-    padding-left: 30px;
-} */
-  
-/* .board-row:after {
-    clear: both;
-    content: "";
-    display: table;
-} */
-  
-/* .status {
-    margin-bottom: 10px;
-} */
-  
-/* .kbd-navigation .square:focus {
-    background: #ddd;
-} */
-  
-/* .game {
-    display: flex;
-    flex-direction: row;
-} */
-  
-/* .game-info {
-    margin-left: 20px;
-} */
-
-/* #pkm1 { background-image: url("../images/gen1/1.png"); }
-#pkm2 { background-image: url("../images/gen1/2.png"); }
-#pkm3 { background-image: url("../images/gen1/3.png"); }
-#pkm4 { background-image: url("../images/gen1/4.png"); } */

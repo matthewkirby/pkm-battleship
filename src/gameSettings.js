@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -140,6 +140,29 @@ function SideBar(props) {
 }
 
 
+const CssTextField = withStyles({
+    root: {
+        '& .MuiInputBase-root': {
+            color: 'white',
+        },
+        '& label.Mui-focused': {
+            color: 'white',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'white',
+            },
+            '&:hover fieldset': {
+                borderColor: 'white',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'white',
+            },
+        }
+    },
+})(TextField);
+
+
 function ControlCenter(props) {
     const [anchorState, setAnchorState] = useState(false);
 
@@ -152,7 +175,7 @@ function ControlCenter(props) {
 
     // Fix for fixed position toolbar and overlapping elements
     const classes = makeStyles(theme => ({
-        offset: theme.mixins.toolbar,
+        offset: theme.mixins.toolbar
     }))
 
     return (
@@ -167,9 +190,15 @@ function ControlCenter(props) {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6">
+                    <Typography variant="h6" className="flex-grow">
                         Pokemon Battleship
                     </Typography>
+                    <CssTextField
+                        label="Search Pokemon"
+                        size="small"
+                        variant="outlined"
+                        onChange={(event) => props.findPkmByName(event.target.value)}
+                    />
                     <SwipeableDrawer
                         anchor="left"
                         open={anchorState}

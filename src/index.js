@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import lookup from './data/sprite_lookup.json'
+import nameList from './data/names_en.json'
 import ControlCenter from './gameSettings.js'
 
 
@@ -12,10 +13,11 @@ function Square(props) {
     const imageStyle = { "backgroundPosition": xpos + 'px ' + ypos + 'px' };
     
     const bgColors = {"-1": "red", 0: "white", 1: "darkgrey", 2: "blue"};
+    const highlight = props.highlight ? "selection" : "";
     return (
         <button
             style={imageStyle}
-            className={`square ${bgColors[props.status]}`} 
+            className={`square ${bgColors[props.status]} ${highlight}`} 
             onClick={props.onClick}
             onContextMenu={props.onContextMenu}
         />
@@ -26,13 +28,15 @@ function Square(props) {
 function Board(props) {
     const board = []
     for(let i=0; i<props.pkmOrder.length; i++) {
+        const key = props.pkmOrder[i] + 1;
         board.push(
             <Square
-                id={props.pkmOrder[i] + 1}
+                id={key}
                 status={props.boardState[i]}
+                highlight={props.highlightMatches.includes(key)}
                 onClick={() => props.onClick(props.boardNum, i)}
                 onContextMenu={event => props.onContextMenu(event, props.boardNum, i)}
-                key={props.pkmOrder[i] + 1} 
+                key={key} 
             />
         )
     }
@@ -58,6 +62,7 @@ function Game(props) {
 
     const [pkmOrder, setPkmOrder] = useState(shuffleBoard());
     const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill(0), Array(maxRows*rowLen).fill(0)]);
+    const [highlightMatches, setHighlightMatches] = useState([]);
 
     function shuffleBoard() {
         let tmpPkmOrder = [];
@@ -132,6 +137,15 @@ function Game(props) {
         setIncludedGens(newIncludedGens);
     }
 
+    function findPkmByName(inputString) {
+        let pkmMatchList = [];
+        if(inputString !== "") {
+            const cappedSting = inputString.charAt(0).toUpperCase() + inputString.slice(1);
+            const matchList = nameList.filter(element => element.startsWith(cappedSting));
+            pkmMatchList = matchList.map(name => nameList.indexOf(name)+1);
+        }
+        setHighlightMatches(pkmMatchList);
+    }
 
     return (
         <React.Fragment>
@@ -142,6 +156,7 @@ function Game(props) {
                 importPkmOrder={importPkmOrder}
                 includedGens={includedGens}
                 toggleGen={toggleGen}
+                findPkmByName={findPkmByName}
             />
             <div className="game">
                 <Board
@@ -149,6 +164,7 @@ function Game(props) {
                     rowLen={rowLen}
                     pkmOrder={pkmOrder}
                     boardState={boardState[0]}
+                    highlightMatches={highlightMatches}
                     onClick={handleClick}
                     onContextMenu={handleContextMenu}
                 />
@@ -158,6 +174,7 @@ function Game(props) {
                     rowLen={rowLen}
                     pkmOrder={pkmOrder}
                     boardState={boardState[1]}
+                    highlightMatches={highlightMatches}
                     onClick={handleClick}
                     onContextMenu={handleContextMenu}
                 />
