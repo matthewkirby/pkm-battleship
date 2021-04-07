@@ -1,0 +1,27 @@
+.white, .w-bgc {
+    background-color: #fff;
+}
+
+.red, .r-bgc {
+    background-color: #e23535;
+}
+
+.blue, .b-bgc {
+    background-color: #0b5eaf;
+}
+
+.darkgrey, .k-bgc {
+    background-color: rgb(56, 56, 56);
+}
+
+.green, .g-bgc {
+    background-color: #38b50b;
+}
+
+.yellow, .y-bgc {
+    background-color: #cfc100;
+}
+
+.purple, .p-bgc {
+    background-color: #6231d4;
+}

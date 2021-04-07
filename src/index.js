@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './colors.css'
 import lookup from './data/sprite_lookup.json'
 import nameList from './data/names_en.json'
 import ControlCenter from './gameSettings.js'
+import ColorPicker from './colorPicker.js'
 
 
 function Square(props) {
@@ -12,12 +14,11 @@ function Square(props) {
     const ypos = -position['y'] * 50 / 64;
     const imageStyle = { "backgroundPosition": xpos + 'px ' + ypos + 'px' };
     
-    const bgColors = {"-1": "red", 0: "white", 1: "darkgrey", 2: "blue"};
     const highlight = props.highlight ? "selection" : "";
     return (
         <button
             style={imageStyle}
-            className={`square ${bgColors[props.status]} ${highlight}`} 
+            className={`square ${props.status+"-bgc"} ${highlight}`} 
             onClick={props.onClick}
             onContextMenu={props.onContextMenu}
         />
@@ -61,8 +62,9 @@ function Game(props) {
     }
 
     const [pkmOrder, setPkmOrder] = useState(shuffleBoard());
-    const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill(0), Array(maxRows*rowLen).fill(0)]);
+    const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
     const [highlightMatches, setHighlightMatches] = useState([]);
+    const [rightClickColor, setRightClickColor] = useState(["r"]);
 
     function shuffleBoard() {
         let tmpPkmOrder = [];
@@ -89,6 +91,7 @@ function Game(props) {
         if(savedBoardState !== null) { setBoardState(savedBoardState); }
         const savedIncludedGens = JSON.parse(localStorage.getItem("includedGens"));
         if(savedIncludedGens !== null) { setIncludedGens(savedIncludedGens); }
+        setRightClickColor(localStorage.getItem("rightClickColor") || "r")
     }, []);
 
     // Save state to localstorage
@@ -98,20 +101,21 @@ function Game(props) {
         localStorage.setItem("pkmOrder", JSON.stringify(pkmOrder));
         localStorage.setItem("boardState", JSON.stringify(boardState));
         localStorage.setItem("includedGens", JSON.stringify(includedGens));
-    }, [rowLen, maxRows, pkmOrder, boardState, includedGens]);
+        localStorage.setItem("rightClickColor", rightClickColor)
+    }, [rowLen, maxRows, pkmOrder, boardState, includedGens, rightClickColor]);
 
-    function handleClick(boardNum, i) {
+    function handlePkmClick(boardNum, i) {
         const newBoardState = boardState.slice();
         const curVal = newBoardState[boardNum][i];
-        newBoardState[boardNum][i] = curVal === 2 ? curVal : curVal+1;
+        newBoardState[boardNum][i] = curVal === "k" ? "w" : "k";
         setBoardState(newBoardState);
     }
 
-    function handleContextMenu(event, boardNum, i) {
+    function handlePkmContextMenu(event, boardNum, i) {
         event.preventDefault();
         const newBoardState = boardState.slice();
         const curVal = newBoardState[boardNum][i];
-        newBoardState[boardNum][i] = curVal === -1 ? curVal : curVal-1;
+        newBoardState[boardNum][i] = curVal === rightClickColor ? "w" : rightClickColor;
         setBoardState(newBoardState);
     }
 
@@ -165,8 +169,8 @@ function Game(props) {
                     pkmOrder={pkmOrder}
                     boardState={boardState[0]}
                     highlightMatches={highlightMatches}
-                    onClick={handleClick}
-                    onContextMenu={handleContextMenu}
+                    onClick={handlePkmClick}
+                    onContextMenu={handlePkmContextMenu}
                 />
                 <span className="board-gap" />
                 <Board
@@ -175,8 +179,13 @@ function Game(props) {
                     pkmOrder={pkmOrder}
                     boardState={boardState[1]}
                     highlightMatches={highlightMatches}
-                    onClick={handleClick}
-                    onContextMenu={handleContextMenu}
+                    onClick={handlePkmClick}
+                    onContextMenu={handlePkmContextMenu}
+                />
+                <span className="board-gap" />
+                <ColorPicker
+                    rightClickColor={rightClickColor}
+                    onClick={setRightClickColor}
                 />
             </div>
         </React.Fragment>

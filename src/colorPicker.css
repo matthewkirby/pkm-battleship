@@ -1,0 +1,15 @@
+.picker-square {
+    border: 1px solid #999;
+    height: 75px;
+    width: 75px;
+}
+
+.selected-color {
+    margin-top: -2px;
+    border: 4px solid #000;
+}
+
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(5, 90px);
+}
