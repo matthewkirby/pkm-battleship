@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/pkm-battleship/static/css/main.6b043b9f.chunk.css",
-    "main.js": "/pkm-battleship/static/js/main.7c77aef8.chunk.js",
-    "main.js.map": "/pkm-battleship/static/js/main.7c77aef8.chunk.js.map",
+    "main.js": "/pkm-battleship/static/js/main.ecd0e6ec.chunk.js",
+    "main.js.map": "/pkm-battleship/static/js/main.ecd0e6ec.chunk.js.map",
     "runtime-main.js": "/pkm-battleship/static/js/runtime-main.db264aab.js",
     "runtime-main.js.map": "/pkm-battleship/static/js/runtime-main.db264aab.js.map",
     "static/js/2.fbfe6276.chunk.js": "/pkm-battleship/static/js/2.fbfe6276.chunk.js",
@@ -16,6 +16,6 @@
     "static/js/runtime-main.db264aab.js",
     "static/js/2.fbfe6276.chunk.js",
     "static/css/main.6b043b9f.chunk.css",
-    "static/js/main.7c77aef8.chunk.js"
+    "static/js/main.ecd0e6ec.chunk.js"
   ]
 }
