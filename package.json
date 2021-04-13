@@ -1,7 +1,7 @@
 {
   "homepage": "https://matthewkirby.github.io/pkm-battleship",
   "name": "pkm-battleship",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.3",

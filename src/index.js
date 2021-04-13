@@ -74,11 +74,19 @@ function Game(props) {
             }
         }
 
-        let shuffledOrder = tmpPkmOrder.sort(() => Math.random() - 0.5);
-        if(shuffledOrder.length > rowLen*maxRows) {
-            shuffledOrder = shuffledOrder.slice(0, rowLen*maxRows);
+        let currentIndex = tmpPkmOrder.length, tempValue, randomIndex;
+        while (currentIndex !== 0) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            tempValue = tmpPkmOrder[currentIndex];
+            tmpPkmOrder[currentIndex] = tmpPkmOrder[randomIndex];
+            tmpPkmOrder[randomIndex] = tempValue;
         }
-        return shuffledOrder
+
+        return tmpPkmOrder
     }
 
     // Grab the locally stored values
