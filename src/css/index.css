@@ -15,7 +15,7 @@ body {
     margin-top: -1px;
     height: 50px;
     width: 50px;
-    background-image: url(./data/sprite_map.png);
+    background-image: url(../data/sprite_map.png);
     background-size: 750px;
 }
   

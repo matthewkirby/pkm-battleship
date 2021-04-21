@@ -1,4 +1,4 @@
-import "./colorPicker.css"
+import 'css/colorPicker.css';
 
 function ColorSwatch(props) {
     const classList = ["picker-square", props.color+"-bgc"];
