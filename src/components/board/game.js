@@ -6,7 +6,7 @@ import Board from 'components/board/board.js';
 import ControlCenter from 'components/settings/gameSettings.js';
 import ColorPicker from 'components/colorPicker/colorPicker.js';
 
-function Game(props) {
+function Game() {
     const [rowLen, setRowLen] = useState(14);
     const [maxRows, setMaxRows] = useState(11);
     const [includedGens, setIncludedGens] = useState([true, false, false, false, false, false, false, false])
@@ -19,7 +19,7 @@ function Game(props) {
     const [pkmOrder, setPkmOrder] = useState(shuffleBoard());
     const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
     const [highlightMatches, setHighlightMatches] = useState([]);
-    const [rightClickColor, setRightClickColor] = useState(["r"]);
+    const [rightClickColor, setRightClickColor] = useState("r");
 
     function shuffleBoard() {
         let tmpPkmOrder = [];
@@ -84,7 +84,7 @@ function Game(props) {
 
     function resetGame() {
         setPkmOrder(shuffleBoard());
-        setBoardState([Array(maxRows*rowLen).fill(0), Array(maxRows*rowLen).fill(0)]);
+        setBoardState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
     }
 
     function exportPkmOrder() {

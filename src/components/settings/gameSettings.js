@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -87,6 +88,16 @@ function ControlCenter(props) {
             <div className={classes().offset} />
         </React.Fragment>
     );
+}
+
+ControlCenter.propTypes = {
+    findPkmByName: PropTypes.func.isRequired,
+    pkmOrder: PropTypes.string.isRequired,
+    exportPkmOrder: PropTypes.func.isRequired,
+    importPkmOrder: PropTypes.func.isRequired,
+    resetGame: PropTypes.func.isRequired,
+    includedGens: PropTypes.arrayOf(PropTypes.bool).isRequired,
+    toggleGen: PropTypes.func.isRequired
 }
 
 export default ControlCenter

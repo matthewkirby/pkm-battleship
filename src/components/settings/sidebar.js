@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,13 +8,10 @@ import ListItem from '@material-ui/core/ListItem';
 import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import ListSubheader from '@material-ui/core/ListSubheader';
-
 import GenerationBoxes from 'components/settings/generations.js';
 
-
-
 function SideBar(props) {
-    const useStyles = makeStyles((theme) => ({
+    const useStyles = makeStyles(() => ({
         root: {
             width: '100%',
             maxWidth: 360,
@@ -82,6 +80,15 @@ function SideBar(props) {
 
         </List>
     )
+}
+
+SideBar.propTypes = {
+    includedGens: PropTypes.arrayOf(PropTypes.bool).isRequired,
+    toggleGen: PropTypes.func.isRequired,
+    pkmOrder: PropTypes.string.isRequired,
+    importPkmOrder: PropTypes.func.isRequired,
+    exportPkmOrder: PropTypes.func.isRequired,
+    resetGame: PropTypes.func.isRequired
 }
 
 export default SideBar;

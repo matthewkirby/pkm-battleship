@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import Square from 'components/board/square.js';
 
 function Board(props) {
@@ -22,6 +23,16 @@ function Board(props) {
             {board}
         </div>
     );
+}
+
+Board.propTypes = {
+    pkmOrder: PropTypes.arrayOf(PropTypes.number).isRequired,
+    boardState: PropTypes.arrayOf(PropTypes.string).isRequired,
+    highlightMatches: PropTypes.array.isRequired,
+    boardNum: PropTypes.number.isRequired,
+    onClick: PropTypes.func.isRequired,
+    onContextMenu: PropTypes.func.isRequired,
+    rowLen: PropTypes.number.isRequired
 }
 
 export default Board;

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import 'css/colorPicker.css';
 
 function ColorSwatch(props) {
@@ -11,6 +12,11 @@ function ColorSwatch(props) {
     )
 }
 
+ColorSwatch.propTypes = {
+    color: PropTypes.string.isRequired,
+    selected: PropTypes.bool.isRequired,
+    onClick: PropTypes.func.isRequired
+}
 
 function ColorPicker(props) {
     const colorList = ["r", "b", "g", "y", "p"]
@@ -29,5 +35,9 @@ function ColorPicker(props) {
     );
 }
 
+ColorPicker.propTypes = {
+    onClick: PropTypes.func.isRequired,
+    rightClickColor: PropTypes.string.isRequired
+}
 
 export default ColorPicker;
