@@ -9,6 +9,8 @@ import ColorPicker from 'components/colorPicker/colorPicker.js';
 function Game() {
     const [rowLen, setRowLen] = useState(14);
     const [maxRows, setMaxRows] = useState(11);
+    const [gameOrientation, setGameOrientation] = useState("vert");
+
     const [includedGens, setIncludedGens] = useState([true, false, false, false, false, false, false, false])
     const genTable = {
         0: [...Array(151).keys()],
@@ -17,7 +19,8 @@ function Game() {
     }
 
     const [pkmOrder, setPkmOrder] = useState(shuffleBoard());
-    const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
+    // const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
+    const [boardState, setBoardState] = useState([Array(pkmOrder.length).fill("w"), Array(pkmOrder.length).fill("w")]);
     const [highlightMatches, setHighlightMatches] = useState([]);
     const [rightClickColor, setRightClickColor] = useState("r");
 
@@ -48,6 +51,7 @@ function Game() {
     React.useEffect(() => {
         setRowLen(Number(localStorage.getItem("rowLen") || 14));
         setMaxRows(Number(localStorage.getItem("maxRows") || 11));
+        setGameOrientation(localStorage.getItem("gameOrientation") || "vert");
         const savedPkmOrder = JSON.parse(localStorage.getItem("pkmOrder"));
         if(savedPkmOrder !== null) { setPkmOrder(savedPkmOrder); }
         const savedBoardState = JSON.parse(localStorage.getItem("boardState"));
@@ -61,11 +65,12 @@ function Game() {
     React.useEffect(() => {
         localStorage.setItem("rowLen", rowLen);
         localStorage.setItem("maxRows", maxRows);
+        localStorage.setItem("gameOrientation", gameOrientation);
         localStorage.setItem("pkmOrder", JSON.stringify(pkmOrder));
         localStorage.setItem("boardState", JSON.stringify(boardState));
         localStorage.setItem("includedGens", JSON.stringify(includedGens));
         localStorage.setItem("rightClickColor", rightClickColor)
-    }, [rowLen, maxRows, pkmOrder, boardState, includedGens, rightClickColor]);
+    }, [rowLen, maxRows, gameOrientation, pkmOrder, boardState, includedGens, rightClickColor]);
 
     function handlePkmClick(boardNum, i) {
         const newBoardState = boardState.slice();
@@ -84,7 +89,8 @@ function Game() {
 
     function resetGame() {
         setPkmOrder(shuffleBoard());
-        setBoardState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
+        // setBoardState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
+        setBoardState([Array(pkmOrder.length).fill("w"), Array(pkmOrder.length).fill("w")]);
     }
 
     function exportPkmOrder() {
@@ -114,6 +120,11 @@ function Game() {
         setHighlightMatches(pkmMatchList);
     }
 
+    function toggleOrientation() {
+        let newOrientation = gameOrientation === "vert" ? "horiz" : "vert";
+        setGameOrientation(newOrientation);
+    }
+
     return (
         <React.Fragment>
             <ControlCenter
@@ -124,8 +135,10 @@ function Game() {
                 includedGens={includedGens}
                 toggleGen={toggleGen}
                 findPkmByName={findPkmByName}
+                gameOrientation={gameOrientation}
+                toggleOrientation={toggleOrientation}
             />
-            <div className="game">
+            <div className={"game-"+gameOrientation}>
                 <Board
                     boardNum={0}
                     rowLen={rowLen}
@@ -135,7 +148,6 @@ function Game() {
                     onClick={handlePkmClick}
                     onContextMenu={handlePkmContextMenu}
                 />
-                <span className="board-gap" />
                 <Board
                     boardNum={1}
                     rowLen={rowLen}
@@ -145,12 +157,11 @@ function Game() {
                     onClick={handlePkmClick}
                     onContextMenu={handlePkmContextMenu}
                 />
-                <span className="board-gap" />
-                <ColorPicker
-                    rightClickColor={rightClickColor}
-                    onClick={setRightClickColor}
-                />
             </div>
+            <ColorPicker
+                rightClickColor={rightClickColor}
+                onClick={setRightClickColor}
+            />
         </React.Fragment>
     );
 }

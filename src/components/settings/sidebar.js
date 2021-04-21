@@ -9,6 +9,7 @@ import Link from '@material-ui/core/Link';
 import Divider from '@material-ui/core/Divider';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import GenerationBoxes from 'components/settings/generations.js';
+import OrientationSwitch from 'components/settings/orientationSwitch.js'
 
 function SideBar(props) {
     const useStyles = makeStyles(() => ({
@@ -27,11 +28,18 @@ function SideBar(props) {
         <List
             subheader={<ListSubheader classes={{root: classes.subheader}}>Options</ListSubheader>}
             classes={{root: classes.root}}
-        >            
+        >
             <GenerationBoxes 
                 includeGens={props.includedGens}
                 toggleGen={props.toggleGen}
             />
+            <Divider variant="middle" />
+            <ListItem>
+                <OrientationSwitch
+                    state={props.gameOrientation}
+                    onClick={props.toggleOrientation}
+                />
+            </ListItem>
             <Divider variant="middle" />
             <ListItem>
                 <TextField
@@ -88,7 +96,9 @@ SideBar.propTypes = {
     pkmOrder: PropTypes.string.isRequired,
     importPkmOrder: PropTypes.func.isRequired,
     exportPkmOrder: PropTypes.func.isRequired,
-    resetGame: PropTypes.func.isRequired
+    resetGame: PropTypes.func.isRequired,
+    gameOrientation: PropTypes.string.isRequired,
+    toggleOrientation: PropTypes.func.isRequired
 }
 
 export default SideBar;

@@ -6,6 +6,18 @@ body {
 
 .game-board {
     display: grid;
+    margin-bottom: 50px;
+    margin-right: 50px;
+}
+
+.game-horiz {
+    display: flex;
+    flex-direction: row;
+}
+
+.game-vert {
+    display: flex;
+    flex-direction: column;
 }
 
 .square {
@@ -25,11 +37,6 @@ body {
 
 .selection {
     border: 4px solid #000;
-}
-
-.board-gap {
-    display: block;
-    height: 50px;
 }
 
 .flex-grow {
