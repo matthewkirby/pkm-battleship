@@ -78,6 +78,15 @@ function SideBar(props) {
                     classes={{root: classes.root}}
                 >New Game</Button>
             </ListItem>
+            <ListItem>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    size="large"
+                    onClick={props.resetSettings}
+                    classes={{root: classes.root}}
+                >Reset Settings</Button>
+            </ListItem>
             <Divider variant="middle" />
             <ListItem>
                 <a href="https://github.com/matthewkirby/pkm-battleship"><Link
@@ -97,6 +106,7 @@ SideBar.propTypes = {
     importPkmOrder: PropTypes.func.isRequired,
     exportPkmOrder: PropTypes.func.isRequired,
     resetGame: PropTypes.func.isRequired,
+    resetSettings: PropTypes.func.isRequired,
     gameOrientation: PropTypes.string.isRequired,
     toggleOrientation: PropTypes.func.isRequired
 }

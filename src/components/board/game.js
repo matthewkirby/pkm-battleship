@@ -6,28 +6,37 @@ import Board from 'components/board/board.js';
 import ControlCenter from 'components/settings/gameSettings.js';
 import ColorPicker from 'components/colorPicker/colorPicker.js';
 
-function Game() {
-    const [rowLen, setRowLen] = useState(14);
-    const [maxRows, setMaxRows] = useState(11);
-    const [gameOrientation, setGameOrientation] = useState("vert");
+const DEFAULT_STATE = {
+    rowLen: 14,
+    maxRows: 11,
+    gameOrientation: "vert",
+    includedGens: [true, false, false, false, false, false, false, false],
+    highlightMatches: [],
+    rightClickColor: "r"
+}
 
-    const [includedGens, setIncludedGens] = useState([true, false, false, false, false, false, false, false])
+function Game() {
+    const [rowLen, setRowLen] = useState(DEFAULT_STATE.rowLen);
+    const [maxRows, setMaxRows] = useState(DEFAULT_STATE.maxRows);
+    const [gameOrientation, setGameOrientation] = useState(DEFAULT_STATE.gameOrientation);
+
+    const [includedGens, setIncludedGens] = useState(DEFAULT_STATE.includedGens)
     const genTable = {
         0: [...Array(151).keys()],
         1: [...Array(100).keys()].map((val) => { return val+151; }),
         2: [...Array(135).keys()].map((val) => { return val+251; })
     }
 
-    const [pkmOrder, setPkmOrder] = useState(shuffleBoard());
+    const [pkmOrder, setPkmOrder] = useState(shuffleBoard(includedGens));
     // const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
     const [boardState, setBoardState] = useState([Array(pkmOrder.length).fill("w"), Array(pkmOrder.length).fill("w")]);
-    const [highlightMatches, setHighlightMatches] = useState([]);
-    const [rightClickColor, setRightClickColor] = useState("r");
+    const [highlightMatches, setHighlightMatches] = useState(DEFAULT_STATE.highlightMatches);
+    const [rightClickColor, setRightClickColor] = useState(DEFAULT_STATE.rightClickColor);
 
-    function shuffleBoard() {
+    function shuffleBoard(tempIncludedGens) {
         let tmpPkmOrder = [];
         for(let i=0; i<8; i++) {
-            if(includedGens[i]) {
+            if(tempIncludedGens[i]) {
                 tmpPkmOrder = tmpPkmOrder.concat(genTable[i])
             }
         }
@@ -49,16 +58,17 @@ function Game() {
 
     // Grab the locally stored values
     React.useEffect(() => {
-        setRowLen(Number(localStorage.getItem("rowLen") || 14));
-        setMaxRows(Number(localStorage.getItem("maxRows") || 11));
-        setGameOrientation(localStorage.getItem("gameOrientation") || "vert");
+        setRowLen(Number(localStorage.getItem("rowLen") || DEFAULT_STATE.rowLen));
+        setMaxRows(Number(localStorage.getItem("maxRows") || DEFAULT_STATE.maxRows));
+        setGameOrientation(localStorage.getItem("gameOrientation") || DEFAULT_STATE.gameOrientation);
         const savedPkmOrder = JSON.parse(localStorage.getItem("pkmOrder"));
         if(savedPkmOrder !== null) { setPkmOrder(savedPkmOrder); }
         const savedBoardState = JSON.parse(localStorage.getItem("boardState"));
         if(savedBoardState !== null) { setBoardState(savedBoardState); }
         const savedIncludedGens = JSON.parse(localStorage.getItem("includedGens"));
         if(savedIncludedGens !== null) { setIncludedGens(savedIncludedGens); }
-        setRightClickColor(localStorage.getItem("rightClickColor") || "r")
+        else { setIncludedGens(DEFAULT_STATE.includedGens); }
+        setRightClickColor(localStorage.getItem("rightClickColor") || DEFAULT_STATE.rightClickColor)
     }, []);
 
     // Save state to localstorage
@@ -87,10 +97,21 @@ function Game() {
         setBoardState(newBoardState);
     }
 
-    function resetGame() {
-        setPkmOrder(shuffleBoard());
+    function resetGame(_, tempIncludedGens=includedGens) {
+        const tempPkmOrder = shuffleBoard(tempIncludedGens);
+        setPkmOrder(tempPkmOrder);
         // setBoardState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
-        setBoardState([Array(pkmOrder.length).fill("w"), Array(pkmOrder.length).fill("w")]);
+        setBoardState([Array(tempPkmOrder.length).fill("w"), Array(tempPkmOrder.length).fill("w")]);
+    }
+
+    const resetSettings = () => {
+        setRowLen(DEFAULT_STATE.rowLen);
+        setMaxRows(DEFAULT_STATE.maxRows);
+        setGameOrientation(DEFAULT_STATE.gameOrientation);
+        setIncludedGens(DEFAULT_STATE.includedGens);
+        setHighlightMatches(DEFAULT_STATE.highlightMatches);
+        setRightClickColor(DEFAULT_STATE.rightClickColor);
+        resetGame(null, DEFAULT_STATE.includedGens);
     }
 
     function exportPkmOrder() {
@@ -130,6 +151,7 @@ function Game() {
             <ControlCenter
                 pkmOrder={JSON.stringify(pkmOrder)}
                 resetGame={resetGame}
+                resetSettings={resetSettings}
                 exportPkmOrder={exportPkmOrder}
                 importPkmOrder={importPkmOrder}
                 includedGens={includedGens}
