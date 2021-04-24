@@ -80,10 +80,9 @@ function ControlCenter(props) {
                             importPkmOrder={props.importPkmOrder}
                             resetGame={props.resetGame}
                             resetSettings={props.resetSettings}
-                            includedGens={props.includedGens}
                             toggleGen={props.toggleGen}
-                            gameOrientation={props.gameOrientation}
                             toggleOrientation={props.toggleOrientation}
+                            gameSettings={props.gameSettings}
                         />
                     </SwipeableDrawer>
                 </Toolbar>
@@ -95,15 +94,17 @@ function ControlCenter(props) {
 
 ControlCenter.propTypes = {
     findPkmByName: PropTypes.func.isRequired,
-    pkmOrder: PropTypes.string.isRequired,
+    pkmOrder: PropTypes.arrayOf(PropTypes.number).isRequired,
     exportPkmOrder: PropTypes.func.isRequired,
     importPkmOrder: PropTypes.func.isRequired,
     resetGame: PropTypes.func.isRequired,
     resetSettings: PropTypes.func.isRequired,
-    includedGens: PropTypes.arrayOf(PropTypes.bool).isRequired,
     toggleGen: PropTypes.func.isRequired,
-    gameOrientation: PropTypes.string.isRequired,
-    toggleOrientation: PropTypes.func.isRequired
+    toggleOrientation: PropTypes.func.isRequired,
+    gameSettings: PropTypes.shape({
+        gameOrientation: PropTypes.string.isRequired,
+        includedGens: PropTypes.arrayOf(PropTypes.bool).isRequired
+    })
 }
 
 export default ControlCenter

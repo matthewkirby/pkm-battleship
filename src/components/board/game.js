@@ -16,22 +16,17 @@ const DEFAULT_STATE = {
 }
 
 function Game() {
-    const [rowLen, setRowLen] = useState(DEFAULT_STATE.rowLen);
-    const [maxRows, setMaxRows] = useState(DEFAULT_STATE.maxRows);
-    const [gameOrientation, setGameOrientation] = useState(DEFAULT_STATE.gameOrientation);
+    const [gameSettings, setGameSettings] = useState(DEFAULT_STATE);
 
-    const [includedGens, setIncludedGens] = useState(DEFAULT_STATE.includedGens)
     const genTable = {
         0: [...Array(151).keys()],
         1: [...Array(100).keys()].map((val) => { return val+151; }),
         2: [...Array(135).keys()].map((val) => { return val+251; })
     }
 
-    const [pkmOrder, setPkmOrder] = useState(shuffleBoard(includedGens));
+    const [pkmOrder, setPkmOrder] = useState(shuffleBoard(gameSettings.includedGens));
     // const [boardState, setBoardState] = useState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
     const [boardState, setBoardState] = useState([Array(pkmOrder.length).fill("w"), Array(pkmOrder.length).fill("w")]);
-    const [highlightMatches, setHighlightMatches] = useState(DEFAULT_STATE.highlightMatches);
-    const [rightClickColor, setRightClickColor] = useState(DEFAULT_STATE.rightClickColor);
 
     function shuffleBoard(tempIncludedGens) {
         let tmpPkmOrder = [];
@@ -58,29 +53,21 @@ function Game() {
 
     // Grab the locally stored values
     React.useEffect(() => {
-        setRowLen(Number(localStorage.getItem("rowLen") || DEFAULT_STATE.rowLen));
-        setMaxRows(Number(localStorage.getItem("maxRows") || DEFAULT_STATE.maxRows));
-        setGameOrientation(localStorage.getItem("gameOrientation") || DEFAULT_STATE.gameOrientation);
+        const savedGameSettings = JSON.parse(localStorage.getItem("gameSettings"));
+        if(savedGameSettings !== null) { setGameSettings(savedGameSettings); }
+        else { setGameSettings(DEFAULT_STATE); }
         const savedPkmOrder = JSON.parse(localStorage.getItem("pkmOrder"));
         if(savedPkmOrder !== null) { setPkmOrder(savedPkmOrder); }
         const savedBoardState = JSON.parse(localStorage.getItem("boardState"));
         if(savedBoardState !== null) { setBoardState(savedBoardState); }
-        const savedIncludedGens = JSON.parse(localStorage.getItem("includedGens"));
-        if(savedIncludedGens !== null) { setIncludedGens(savedIncludedGens); }
-        else { setIncludedGens(DEFAULT_STATE.includedGens); }
-        setRightClickColor(localStorage.getItem("rightClickColor") || DEFAULT_STATE.rightClickColor)
     }, []);
 
     // Save state to localstorage
     React.useEffect(() => {
-        localStorage.setItem("rowLen", rowLen);
-        localStorage.setItem("maxRows", maxRows);
-        localStorage.setItem("gameOrientation", gameOrientation);
+        localStorage.setItem("gameSettings", JSON.stringify(gameSettings));
         localStorage.setItem("pkmOrder", JSON.stringify(pkmOrder));
         localStorage.setItem("boardState", JSON.stringify(boardState));
-        localStorage.setItem("includedGens", JSON.stringify(includedGens));
-        localStorage.setItem("rightClickColor", rightClickColor)
-    }, [rowLen, maxRows, gameOrientation, pkmOrder, boardState, includedGens, rightClickColor]);
+    }, [gameSettings, pkmOrder, boardState]);
 
     function handlePkmClick(boardNum, i) {
         const newBoardState = boardState.slice();
@@ -93,11 +80,11 @@ function Game() {
         event.preventDefault();
         const newBoardState = boardState.slice();
         const curVal = newBoardState[boardNum][i];
-        newBoardState[boardNum][i] = curVal === rightClickColor ? "w" : rightClickColor;
+        newBoardState[boardNum][i] = curVal === gameSettings.rightClickColor ? "w" : gameSettings.rightClickColor;
         setBoardState(newBoardState);
     }
 
-    function resetGame(_, tempIncludedGens=includedGens) {
+    function resetGame(_, tempIncludedGens=gameSettings.includedGens) {
         const tempPkmOrder = shuffleBoard(tempIncludedGens);
         setPkmOrder(tempPkmOrder);
         // setBoardState([Array(maxRows*rowLen).fill("w"), Array(maxRows*rowLen).fill("w")]);
@@ -105,12 +92,7 @@ function Game() {
     }
 
     const resetSettings = () => {
-        setRowLen(DEFAULT_STATE.rowLen);
-        setMaxRows(DEFAULT_STATE.maxRows);
-        setGameOrientation(DEFAULT_STATE.gameOrientation);
-        setIncludedGens(DEFAULT_STATE.includedGens);
-        setHighlightMatches(DEFAULT_STATE.highlightMatches);
-        setRightClickColor(DEFAULT_STATE.rightClickColor);
+        setGameSettings(DEFAULT_STATE);
         resetGame(null, DEFAULT_STATE.includedGens);
     }
 
@@ -126,9 +108,13 @@ function Game() {
     }
 
     function toggleGen(gen) {
-        let newIncludedGens = includedGens.slice()
+        let newIncludedGens = gameSettings.includedGens.slice()
         newIncludedGens[gen] = !newIncludedGens[gen];
-        setIncludedGens(newIncludedGens);
+        setGameSettings({...gameSettings, includedGens: newIncludedGens});
+    }
+
+    function setRightClickColor(color) {
+        setGameSettings({...gameSettings, rightClickColor: color});
     }
 
     function findPkmByName(inputString) {
@@ -138,50 +124,47 @@ function Game() {
             const matchList = nameList.filter(element => element.startsWith(cappedSting));
             pkmMatchList = matchList.map(name => nameList.indexOf(name)+1);
         }
-        setHighlightMatches(pkmMatchList);
+        setGameSettings({...gameSettings, highlightMatches: pkmMatchList});
     }
 
     function toggleOrientation() {
-        let newOrientation = gameOrientation === "vert" ? "horiz" : "vert";
-        setGameOrientation(newOrientation);
+        const newGameOrientation = gameSettings.gameOrientation === "vert" ? "horiz" : "vert";
+        setGameSettings({...gameSettings, gameOrientation: newGameOrientation})
     }
 
     return (
         <React.Fragment>
             <ControlCenter
-                pkmOrder={JSON.stringify(pkmOrder)}
+                pkmOrder={pkmOrder}
+                gameSettings={gameSettings}
                 resetGame={resetGame}
                 resetSettings={resetSettings}
                 exportPkmOrder={exportPkmOrder}
                 importPkmOrder={importPkmOrder}
-                includedGens={includedGens}
                 toggleGen={toggleGen}
                 findPkmByName={findPkmByName}
-                gameOrientation={gameOrientation}
                 toggleOrientation={toggleOrientation}
             />
-            <div className={"game-"+gameOrientation}>
+            <div className={"game-"+gameSettings.gameOrientation}>
                 <Board
                     boardNum={0}
-                    rowLen={rowLen}
+                    gameSettings={gameSettings}
                     pkmOrder={pkmOrder}
                     boardState={boardState[0]}
-                    highlightMatches={highlightMatches}
                     onClick={handlePkmClick}
                     onContextMenu={handlePkmContextMenu}
                 />
                 <Board
                     boardNum={1}
-                    rowLen={rowLen}
+                    gameSettings={gameSettings}
                     pkmOrder={pkmOrder}
                     boardState={boardState[1]}
-                    highlightMatches={highlightMatches}
                     onClick={handlePkmClick}
                     onContextMenu={handlePkmContextMenu}
                 />
             </div>
             <ColorPicker
-                rightClickColor={rightClickColor}
+                rightClickColor={gameSettings.rightClickColor}
                 onClick={setRightClickColor}
             />
         </React.Fragment>

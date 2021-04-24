@@ -9,7 +9,7 @@ function Board(props) {
             <Square
                 id={key}
                 status={props.boardState[i]}
-                highlight={props.highlightMatches.includes(key)}
+                highlight={props.gameSettings.highlightMatches.includes(key)}
                 onClick={() => props.onClick(props.boardNum, i)}
                 onContextMenu={event => props.onContextMenu(event, props.boardNum, i)}
                 key={key} 
@@ -17,7 +17,7 @@ function Board(props) {
         )
     }
 
-    const boardStyle = { "gridTemplateColumns": 'repeat(' + props.rowLen + ', 49px)' };
+    const boardStyle = { "gridTemplateColumns": 'repeat(' + props.gameSettings.rowLen + ', 49px)' };
     return (
         <div className="game-board" style={boardStyle}>
             {board}
@@ -28,11 +28,13 @@ function Board(props) {
 Board.propTypes = {
     pkmOrder: PropTypes.arrayOf(PropTypes.number).isRequired,
     boardState: PropTypes.arrayOf(PropTypes.string).isRequired,
-    highlightMatches: PropTypes.array.isRequired,
     boardNum: PropTypes.number.isRequired,
     onClick: PropTypes.func.isRequired,
     onContextMenu: PropTypes.func.isRequired,
-    rowLen: PropTypes.number.isRequired
+    gameSettings: PropTypes.shape({
+        rowLen: PropTypes.number.isRequired,
+        highlightMatches: PropTypes.array.isRequired
+    })
 }
 
 export default Board;

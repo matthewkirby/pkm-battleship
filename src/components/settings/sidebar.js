@@ -30,13 +30,13 @@ function SideBar(props) {
             classes={{root: classes.root}}
         >
             <GenerationBoxes 
-                includeGens={props.includedGens}
+                includeGens={props.gameSettings.includedGens}
                 toggleGen={props.toggleGen}
             />
             <Divider variant="middle" />
             <ListItem>
                 <OrientationSwitch
-                    state={props.gameOrientation}
+                    state={props.gameSettings.gameOrientation}
                     onClick={props.toggleOrientation}
                 />
             </ListItem>
@@ -46,7 +46,7 @@ function SideBar(props) {
                     variant="outlined"
                     label="Pokemon Sequence String"
                     size="small"
-                    defaultValue={props.pkmOrder}
+                    defaultValue={JSON.stringify(props.pkmOrder)}
                     classes={{root: classes.root}}
                     id="sequence-string"
                 />
@@ -100,15 +100,17 @@ function SideBar(props) {
 }
 
 SideBar.propTypes = {
-    includedGens: PropTypes.arrayOf(PropTypes.bool).isRequired,
     toggleGen: PropTypes.func.isRequired,
-    pkmOrder: PropTypes.string.isRequired,
+    pkmOrder: PropTypes.arrayOf(PropTypes.number).isRequired,
     importPkmOrder: PropTypes.func.isRequired,
     exportPkmOrder: PropTypes.func.isRequired,
     resetGame: PropTypes.func.isRequired,
     resetSettings: PropTypes.func.isRequired,
-    gameOrientation: PropTypes.string.isRequired,
-    toggleOrientation: PropTypes.func.isRequired
+    toggleOrientation: PropTypes.func.isRequired,
+    gameSettings: PropTypes.shape({
+        gameOrientation: PropTypes.string.isRequired,
+        includedGens: PropTypes.arrayOf(PropTypes.bool).isRequired
+    })
 }
 
 export default SideBar;
